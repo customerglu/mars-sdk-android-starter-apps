@@ -25,14 +25,27 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import androidx.core.app.NotificationCompat;
+
+import android.provider.Settings;
 import android.util.Log;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.firebase.quickstart.fcm.R;
 
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
+
+import io.swagger.client.ApiException;
+import io.swagger.client.api.UserApi;
+import io.swagger.client.model.Body;
+import io.swagger.client.model.Body2;
+import io.swagger.client.model.InlineResponse2001;
+import io.swagger.client.model.InlineResponse2002;
+
+
+
 
 /**
  * NOTE: There can only be one service in each app that receives FCM messages. If multiple
@@ -148,6 +161,24 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
      */
     private void sendRegistrationToServer(String token) {
         // TODO: Implement this method to send token to your app server.
+//        String android_id = Settings.Secure.getString(this.getContentResolver(),
+//                Settings.Secure.ANDROID_ID);
+//
+//        Log.d("Android","Android ID : "+android_id);
+        UserApi userInstance = new UserApi();
+        Body2 newUserBody = new Body2();
+        newUserBody.setToken(token);
+        newUserBody.setDeviceId(FirebaseInstanceId.getInstance().getId());
+
+        try {
+            InlineResponse2002 res = userInstance.registerDeviceToken(newUserBody);
+            Log.i("Hitting Registration", res.toString());
+//            Log.i("Secure Id", android_id);
+        } catch (ApiException e) {
+            System.err.println("");
+            e.printStackTrace();
+        }
+
     }
 
     /**

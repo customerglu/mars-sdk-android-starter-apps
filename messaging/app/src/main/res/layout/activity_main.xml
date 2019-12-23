@@ -9,6 +9,13 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.google.firebase.quickstart.fcm.java.MainActivity">
 
+    <Button
+        android:id="@+id/drawWebView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="draw Webview" />
+
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -38,5 +45,11 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:text="@string/log_token" />
+
+    <Button
+        android:id="@+id/showAllOffers"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Show All Offers" />
 
 </LinearLayout>
