@@ -199,7 +199,8 @@ public class MainActivity extends AppCompatActivity {
 //                String summary = "<html><body>You scored <b>192</b> points.</body></html>";
 //                InputStream stream= assets.open("index.html", AssetManager.ACCESS_BUFFER);
 //                myWebView.loadData(summary, "text/html", null);
-                myWebView.loadUrl("file:///android_asset/index.html");
+//                myWebView.loadUrl("file:///android_asset/index2.html");
+                myWebView.loadUrl("https://webview-demo.marax.ai/offers");
                 setContentView(myWebView);
 //                myWebView.loadUrl("https://www.google.com");
                 Log.i("Running", "NOWWWW");
