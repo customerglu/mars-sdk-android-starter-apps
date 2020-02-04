@@ -36,6 +36,7 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
@@ -65,13 +66,25 @@ import com.google.firebase.quickstart.fcm.java.persistance.OfferRepository;
 import com.google.firebase.quickstart.fcm.java.persistance.db.dao.OfferDao;
 import com.google.firebase.quickstart.fcm.java.persistance.db.entity.Offer;
 import com.google.firebase.quickstart.fcm.java.persistance.viewmodel.OfferViewModel;
+import ai.marax.android.sdk.core.RudderClient;
+import ai.marax.android.sdk.core.RudderMessageBuilder;
+import ai.marax.android.sdk.core.RudderProperty;
+import ai.marax.android.sdk.core.RudderTraits;
 
+import java.util.Date;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import android.app.Application;
+
+import static com.google.firebase.quickstart.fcm.java.MainApplication.getRudderClient;
 
 
 public class MainActivity extends AppCompatActivity {
     private OfferRepository mRepository;
+
 
 
     private class MyWebViewClient extends WebViewClient {
@@ -91,7 +104,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     private static final String TAG = "MainActivity";
     private String tempDeviceId = FirebaseInstanceId.getInstance().getId();
 
@@ -100,9 +112,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final AssetManager assets = this.getAssets();
-        final ApiClient marsDefaultClient = new ApiClient(tempDeviceId);
-        Log.i("The API Client is ", marsDefaultClient.getDeviceId());
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // Create channel to show notifications.
@@ -113,6 +122,8 @@ public class MainActivity extends AppCompatActivity {
             notificationManager.createNotificationChannel(new NotificationChannel(channelId,
                     channelName, NotificationManager.IMPORTANCE_LOW));
         }
+
+
 
         // If a notification message is tapped, any data accompanying the notification
         // message is available in the intent extras. In this sample the launcher
@@ -129,152 +140,74 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "Key: " + key + " Value: " + value);
             }
         }
-        // [END handle_data_extras]
-//drawWebView
-        Button subscribeButton = findViewById(R.id.subscribeButton);
-        subscribeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "Subscribing to weather topic");
-                // [START subscribe_topics]
-                FirebaseMessaging.getInstance().subscribeToTopic("weather")
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                String msg = getString(R.string.msg_subscribed);
-                                if (!task.isSuccessful()) {
-                                    msg = getString(R.string.msg_subscribe_failed);
-                                }
-                                Log.d(TAG, msg);
-                                Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                // [END subscribe_topics]
-            }
-        });
-
-        Button logTokenButton = findViewById(R.id.logTokenButton);
-        logTokenButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Get token
-                // [START retrieve_current_token]
-                FirebaseInstanceId.getInstance().getInstanceId()
-                        .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                                if (!task.isSuccessful()) {
-                                    Log.w(TAG, "getInstanceId failed", task.getException());
-                                    return;
-                                }
-
-                                // Get new Instance ID token
-                                String token = task.getResult().getToken();
-
-                                // Log and toast
-                                String msg = getString(R.string.msg_token_fmt, token);
-                                Log.d(TAG, msg);
-                                Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                // [END retrieve_current_token]
-            }
-        });
 
 
         Button drawWebViewButton = findViewById(R.id.drawWebView);
         drawWebViewButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                WebView myWebView = new WebView(MainActivity.this);
-                WebSettings webSettings = myWebView.getSettings();
-                myWebView.addJavascriptInterface(new WebAppInterface(MainActivity.this), "Android");
-                webSettings.setJavaScriptEnabled(true);
-//                String unencodedHtml =
-//                        "&lt;html&gt;&lt;body&gt;'%23' is the percent code for ‘#‘ &lt;/body&gt;&lt;/html&gt;";
-//                String encodedHtml = Base64.encodeToString(unencodedHtml.getBytes(),
-//                        Base64.NO_PADDING);
-//                myWebView.setWebViewClient(new MyWebViewClient());
-//                myWebView.loadData(encodedHtml, "text/html", "base64");
-//                String summary = "<html><body>You scored <b>192</b> points.</body></html>";
-//                InputStream stream= assets.open("index.html", AssetManager.ACCESS_BUFFER);
-//                myWebView.loadData(summary, "text/html", null);
-//                myWebView.loadUrl("file:///android_asset/index2.html");
-                myWebView.loadUrl("https://webview-demo.marax.ai/offers");
+                WebView myWebView = getRudderClient().drawOfferView(MainActivity.this);
                 setContentView(myWebView);
-//                myWebView.loadUrl("https://www.google.com");
                 Log.i("Running", "NOWWWW");
-                // [END retrieve_current_token]
             }
         });
 
-
-        Button showAllOffersButton = findViewById(R.id.showAllOffers);
-        showAllOffersButton.setOnClickListener(new View.OnClickListener() {
+        Button orderCompleted50 = findViewById(R.id.order_completed_50);
+        orderCompleted50.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String d = marsDefaultClient.getDeviceId();
-                Log.i("DeviceId From SDK is ", d);
-                Log.i("mansion", "About to Start a new intent");
-                Intent myIntent = new Intent(MainActivity.this, OfferList.class);
-                startActivity(myIntent);
+                Map<String, Object> properties = new HashMap<>();
+                properties.put("order_value", 50);
+                getRudderClient().track("ORDER_COMPLETED", new RudderProperty().putValue(properties));
+
             }
         });
 
+        Button orderCompleted600 = findViewById(R.id.order_completed_600);
+        orderCompleted600.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Map<String, Object> properties = new HashMap<>();
+                properties.put("order_value", 600);
+                getRudderClient().track("ORDER_COMPLETED", new RudderProperty().putValue(properties));
 
-
-
-    }
-
-    public class WebAppInterface {
-        Context mContext;
-
-
-        /** Instantiate the interface and set the context */
-        WebAppInterface(Context c) {
-
-            mContext = c;
-        }
-        /** Show a toast from the web page */
-        @JavascriptInterface
-        public void killView(String toast) {
-            Toast.makeText(mContext, toast, Toast.LENGTH_SHORT).show();
-            UserOffersApi apiInstance = new UserOffersApi();
-//            UserApi userInstance = new UserApi();
-            UserOfferObject body = new UserOfferObject();
-//            Body newUserBody = new Body();
-//            newUserBody = newUserBody.deviceId("dark");
-//            PetApi apiInstance = new PetApi();
-//            Pet body = new Pet(); // Pet | Pet object that needs to be added to the store
-
-
-            try {
-//                apiInstance.addPet(body);
-                InlineResponse200 res = apiInstance.fetchOffer("5def66ed53bb2e00d88d92e5", "5def6acaf713800130d70957");
-                Offer offer = new Offer("approved", res.getData().getUserId(), res.getData().getOfferId(), res.getData().getCreatedAt(), res.getData().getUpdatedAt(), res.getData().getTemplateUrl());
-
-
-//                Offer offer = new Offer("started", "abc1", "ME100", "2019-12-16 13:15:22", "2019-12-16 13:30:20", "https://marax.ai/go/home");
-//                mOfferViewModel = new ViewModelProvider(this).get(OfferViewModel.class);
-//                OfferRepository mOfferRep = new OfferRepository();
-//                mRepository.insert(offer);
-//                mOfferViewModel.insert(offer);
-//                InlineResponse2001 res = userInstance.createUser(newUserBody);
-                Log.i("BodyTry", res.toString());
-            } catch (ApiException e) {
-                System.err.println("");
-                e.printStackTrace();
             }
-//            } catch (InterruptedException e) {
-//                System.err.println("Exception in interupted Execution");
-//                e.printStackTrace();
-//            } catch (ExecutionException e) {
-//                e.printStackTrace();
-//            } catch (TimeoutException e) {
-//                e.printStackTrace();
-//            }
-            finish();
-        }
+        });
+
+        Button randomEventTest = findViewById(R.id.random_event_test);
+        randomEventTest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Map<String, Object> properties = new HashMap<>();
+                properties.put("something", "test");
+                getRudderClient().track("RANDOM_EVENT", new RudderProperty().putValue(properties));
+
+            }
+        });
+
+        Button randomEventBad = findViewById(R.id.random_event_bad);
+        randomEventBad.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Map<String, Object> properties = new HashMap<>();
+                properties.put("something", "bad");
+                getRudderClient().track("RANDOM_EVENT", new RudderProperty().putValue(properties));
+
+            }
+        });
+
+        Button updateAttributes = findViewById(R.id.update_attributes);
+        updateAttributes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Map<String,Object> properties = new HashMap<>();
+                properties.put("email", "sjkdfhkjh@gmail.com");
+                properties.put("phone", "+9193389393");
+                getRudderClient().updateAttributes(properties);
+
+            }
+        });
     }
+
 
 }

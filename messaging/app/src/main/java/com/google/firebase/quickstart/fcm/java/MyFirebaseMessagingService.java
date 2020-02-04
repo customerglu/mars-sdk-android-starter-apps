@@ -37,6 +37,9 @@ import com.google.firebase.quickstart.fcm.R;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import io.swagger.client.ApiException;
 import io.swagger.client.api.UserApi;
 import io.swagger.client.model.Body;
@@ -44,7 +47,9 @@ import io.swagger.client.model.Body2;
 import io.swagger.client.model.InlineResponse2001;
 import io.swagger.client.model.InlineResponse2002;
 
+import ai.marax.android.sdk.core.RudderProperty;
 
+import static com.google.firebase.quickstart.fcm.java.MainApplication.getRudderClient;
 
 
 /**
@@ -124,12 +129,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
      */
     @Override
     public void onNewToken(String token) {
-        Log.d(TAG, "Refreshed token: " + token);
+        Log.d(TAG, "RToken: " + token);
+        Log.d(TAG, "SendingRockets");
 
         // If you want to send messages to this application instance or
         // manage this apps subscriptions on the server side, send the
         // Instance ID token to your app server.
-        sendRegistrationToServer(token);
+        getRudderClient().registerDevice(token, FirebaseInstanceId.getInstance().getId() );
+//        sendRegistrationToServer(token);
     }
     // [END on_new_token]
 
@@ -160,24 +167,31 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
      * @param token The new token.
      */
     private void sendRegistrationToServer(String token) {
+//        Map<String,Object> properties = new HashMap<>();
+//        properties.put("deviceId", FirebaseInstanceId.getInstance().getId());
+//        properties.put("token", token);
+
+        getRudderClient().registerDevice(token, FirebaseInstanceId.getInstance().getId() );
         // TODO: Implement this method to send token to your app server.
 //        String android_id = Settings.Secure.getString(this.getContentResolver(),
 //                Settings.Secure.ANDROID_ID);
 //
 //        Log.d("Android","Android ID : "+android_id);
-        UserApi userInstance = new UserApi();
-        Body2 newUserBody = new Body2();
-        newUserBody.setToken(token);
-        newUserBody.setDeviceId(FirebaseInstanceId.getInstance().getId());
-
-        try {
-            InlineResponse2002 res = userInstance.registerDeviceToken(newUserBody);
-            Log.i("Hitting Registration", res.toString());
-//            Log.i("Secure Id", android_id);
-        } catch (ApiException e) {
-            System.err.println("");
-            e.printStackTrace();
-        }
+//        UserApi userInstance = new UserApi();
+//        Body2 newUserBody = new Body2();
+//        newUserBody.setToken(token);
+//        newUserBody.setDeviceId(FirebaseInstanceId.getInstance().getId());
+//        Log.i("Hitting Registration", newUserBody.toString());
+//
+//
+//        try {
+//            InlineResponse2002 res = userInstance.registerDeviceToken(newUserBody);
+//            Log.i("Hitting Registration", res.toString());
+////            Log.i("Secure Id", android_id);
+//        } catch (ApiException e) {
+//            System.err.println("");
+//            e.printStackTrace();
+//        }
 
     }
 

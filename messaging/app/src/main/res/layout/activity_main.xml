@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,19 +10,14 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.google.firebase.quickstart.fcm.java.MainActivity">
 
-    <Button
-        android:id="@+id/drawWebView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="draw Webview" />
-
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_width="186dp"
+        android:layout_height="86dp"
         android:layout_gravity="center_horizontal"
-        android:src="@drawable/firebase_lockup_400" />
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/mars_default_400"
+        app:srcCompat="@drawable/mars_default_400"
+        tools:srcCompat="@drawable/mars_default_400" />
 
     <TextView
         android:id="@+id/informationTextView"
@@ -29,27 +25,42 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:gravity="center_horizontal"
-        android:text="@string/quickstart_message" />
+        android:text="@string/marax_default_message" />
 
     <Button
-        android:id="@+id/subscribeButton"
-        android:layout_width="@dimen/standard_field_width"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp"
-        android:text="@string/subscribe_to_weather" />
-
-    <Button
-        android:id="@+id/logTokenButton"
-        android:layout_width="@dimen/standard_field_width"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/log_token" />
-
-    <Button
-        android:id="@+id/showAllOffers"
+        android:id="@+id/drawWebView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Show All Offers" />
+        android:text="Show My Offers" />
+
+    <Button
+        android:id="@+id/order_completed_50"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="MAKE ORDER Rs50" />
+
+    <Button
+        android:id="@+id/update_attributes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Update Attributes" />
+
+    <Button
+        android:id="@+id/order_completed_600"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Make ORDER Rs 600" />
+
+    <Button
+        android:id="@+id/random_event_test"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="RANDOM EVENT TEST" />
+
+    <Button
+        android:id="@+id/random_event_bad"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Random event bad" />
 
 </LinearLayout>
