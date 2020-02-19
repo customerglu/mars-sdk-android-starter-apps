@@ -17,7 +17,7 @@ public class MainApplication extends Application {
     private static MainApplication instance;
     private static RudderClient rudderClient;
     private static final String writeKey = "API-KEY";
-    private static final String endPointUrl = "https://sdk-dev.marax.ai";
+    private static final String endPointUrl = "https://encomv8e2z13s.x.pipedream.net";
 
     @Override
     public void onCreate() {

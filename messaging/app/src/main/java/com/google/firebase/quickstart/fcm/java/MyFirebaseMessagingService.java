@@ -40,12 +40,6 @@ import androidx.work.WorkManager;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.swagger.client.ApiException;
-import io.swagger.client.api.UserApi;
-import io.swagger.client.model.Body;
-import io.swagger.client.model.Body2;
-import io.swagger.client.model.InlineResponse2001;
-import io.swagger.client.model.InlineResponse2002;
 
 import ai.marax.android.sdk.core.RudderProperty;
 

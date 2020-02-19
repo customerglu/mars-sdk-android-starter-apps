@@ -16,19 +16,6 @@
 
 package com.google.firebase.quickstart.fcm.java;
 
-//import io.swagger.client.api.PetApi;
-//import io.swagger.client.model.Pet;
-//import io.swagger.client.ApiException;
-
-import io.swagger.client.ApiClient;
-import io.swagger.client.api.UserOffersApi;
-import io.swagger.client.api.UserApi;
-import io.swagger.client.model.InlineResponse2001;
-import io.swagger.client.model.UserOfferObject;
-import io.swagger.client.model.Body;
-import io.swagger.client.model.InlineResponse200;
-import io.swagger.client.ApiException;
-
 
 import android.app.Application;
 import android.app.NotificationChannel;
