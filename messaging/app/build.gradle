@@ -38,6 +38,12 @@ android {
     }
 }
 
+//repositories {
+//    maven {
+//        url  "https://dl.bintray.com/juluahamed/mars-sdk-android-core"
+//    }
+//}
+
 dependencies {
 
     //    implementation files('libs/swagger-petstore-okhttp-gson-1.0.0.jar')
@@ -117,7 +123,9 @@ dependencies {
 
 //     Testing
     androidTestImplementation "androidx.arch.core:core-testing:$rootProject.coreTestingVersion"
-    implementation files('libs/full.jar')
+//    implementation files('libs/full.jar')
+//    implementation 'com.mars.android.sdk:mars-sdk-core:0.1.4'
+    implementation 'ai.mars.android.sdk:mars-sdk-core:0.1.4'
 }
 
 apply plugin: 'com.google.gms.google-services'
